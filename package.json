@@ -12,9 +12,8 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint --fix && prettier --write",
-    "format": "prettier --write",
+    "format": "prettier --write \"./**/*.ts{,x}\"",
     "format:md": "prettier --write \"**/*.md\"",
-    "format:ts": "prettier --write \"./**/*.ts{,x}\"",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "e2e": "playwright test",
@@ -32,6 +31,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.11.8",
     "lucide-react": "^0.451.0",
     "next": "^15.0.0-rc.0",
     "react": "^19.0.0-rc-06d0b89e-20240801",
@@ -66,10 +66,5 @@
     "typescript": "^5",
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.1.2"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix"
-    ]
   }
 }

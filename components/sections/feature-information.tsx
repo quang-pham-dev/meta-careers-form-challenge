@@ -1,4 +1,5 @@
 import { FeatureDescription } from '@/components/sections/feature-description'
+import { AnimatedFadeUp } from '@/components/animated-fade-up'
 import { FEATURES_INFORMATION } from '@/constants'
 
 export function FeatureInformation() {
@@ -9,18 +10,18 @@ export function FeatureInformation() {
         Create a Career Profile to keep track of your applications, prepare for
         the interview process and more.
       </p>
-      <p className="text-lg text-gray-600 mb-2">Additional Features</p>
-      <div className="w-36 h-0.5 bg-gray-300 mb-4"></div>
+      <AnimatedFadeUp delay={0.1} duration={0.5}>
+        <p className="text-lg text-gray-600 mb-2">Additional Features</p>
+        <div className="w-36 h-0.5 bg-gray-300 mb-4"></div>
+      </AnimatedFadeUp>
 
       <div className="space-y-4">
         {FEATURES_INFORMATION.map(feature => {
-          const { title, description } = feature
+          const { title, description, animationConfig } = feature
           return (
-            <FeatureDescription
-              key={title}
-              title={title}
-              description={description}
-            />
+            <AnimatedFadeUp key={title} {...animationConfig}>
+              <FeatureDescription title={title} description={description} />
+            </AnimatedFadeUp>
           )
         })}
       </div>

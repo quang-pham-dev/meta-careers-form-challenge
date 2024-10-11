@@ -11,8 +11,9 @@ import { useFormStatus } from 'react-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EyeIcon, EyeOffIcon, CheckCircle2, XCircle } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { motion } from 'framer-motion'
 
+import { cn } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -53,12 +54,18 @@ function SubmitButton({ isPending }: { isPending?: boolean }) {
   const { pending } = useFormStatus()
 
   return (
-    <Button
-      type="submit"
-      disabled={pending || isPending}
-      className="w-full bg-blue-500 hover:bg-blue-600">
-      {pending || isPending ? 'Submitting...' : 'Create Career Profile'}
-    </Button>
+    <motion.div
+      initial={{ y: 20, opacity: 0.5 }}
+      animate={{ y: 0, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8, type: 'spring', ease: 'easeOut' }}>
+      <Button
+        type="submit"
+        disabled={pending || isPending}
+        className="w-full bg-blue-500 hover:bg-blue-600">
+        {pending || isPending ? 'Submitting...' : 'Create Career Profile'}
+      </Button>
+    </motion.div>
   )
 }
 
