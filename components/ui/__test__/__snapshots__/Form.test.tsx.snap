@@ -1,0 +1,33 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Form > matches snapshot 1`] = `
+<DocumentFragment>
+  <form>
+    <div
+      class="space-y-2"
+    >
+      <label
+        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        for=":r0:-form-item"
+      >
+        Username
+      </label>
+      <input
+        aria-describedby=":r0:-form-item-description"
+        aria-invalid="false"
+        class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-base sm:text-sm"
+        id=":r0:-form-item"
+        name="username"
+        placeholder="Enter username"
+        value=""
+      />
+      <p
+        class="text-[0.8rem] text-muted-foreground"
+        id=":r0:-form-item-description"
+      >
+        This is your public username.
+      </p>
+    </div>
+  </form>
+</DocumentFragment>
+`;
