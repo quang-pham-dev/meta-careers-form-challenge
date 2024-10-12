@@ -11,9 +11,8 @@ import { useFormStatus } from 'react-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EyeIcon, EyeOffIcon, CheckCircle2, XCircle } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { useToast } from '@/hooks/use-toast'
 
-import { cn } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -32,10 +31,15 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { PasswordStrengthIndicator } from '@/components/sections'
-
+import { SubmitButton } from '@/components/ui/submit-button'
 import { submitSignUpForm } from '@/actions'
 import { COUNTRY_CODES } from '@/constants'
-import { signUpSchema, type FormValues, type FormState } from '@/validations'
+import {
+  type FormValues,
+  type FormState,
+  clientSignUpSchema,
+} from '@/validations'
+import { cn } from '@/lib/utils'
 
 const PASSWORD_STRENGTH_INDICATORS = [
   { label: 'At least 6 characters', met: ['length'] },
@@ -48,25 +52,6 @@ const initialState: FormState = {
   message: '',
   data: null,
   error: [],
-}
-
-function SubmitButton({ isPending }: { isPending?: boolean }) {
-  const { pending } = useFormStatus()
-
-  return (
-    <motion.div
-      initial={{ y: 20, opacity: 0.5 }}
-      animate={{ y: 0, opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, type: 'spring', ease: 'easeOut' }}>
-      <Button
-        type="submit"
-        disabled={pending || isPending}
-        className="w-full bg-blue-500 hover:bg-blue-600">
-        {pending || isPending ? 'Submitting...' : 'Create Career Profile'}
-      </Button>
-    </motion.div>
-  )
 }
 
 export default function SignUpForm() {
@@ -83,9 +68,10 @@ export default function SignUpForm() {
     submitSignUpForm,
     initialState,
   )
+  const { toast } = useToast()
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(clientSignUpSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -109,12 +95,27 @@ export default function SignUpForm() {
     })
   }, [password])
 
-  function onSubmit(values: FormValues) {
+  useEffect(() => {
+    if (state.data) {
+      toast({
+        title: 'Account created successfully!',
+        description: 'You can now log in with your new account.',
+      })
+
+      form.reset()
+    }
+  }, [state.data, toast, form])
+
+  function submitForm(values: FormValues) {
     startTransition(async () => {
       const formData = new FormData(formRef.current!)
       Object.entries(values).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          formData.append(key, Number(value).toString())
+        if (
+          key !== 'confirmPassword' &&
+          value !== undefined &&
+          value !== null
+        ) {
+          formData.append(key, value.toString())
         }
       })
 
@@ -127,7 +128,7 @@ export default function SignUpForm() {
       <form
         ref={formRef}
         action={formAction}
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(submitForm)}
         className="space-y-6 bg-white p-8 rounded-lg shadow-md">
         <div className="grid grid-cols-2 gap-4">
           <FormField
@@ -216,6 +217,7 @@ export default function SignUpForm() {
             )}
           />
         </div>
+
         <FormField
           control={form.control}
           name="password"
@@ -356,10 +358,10 @@ export default function SignUpForm() {
         )}
 
         <div className="flex flex-col justify-end">
-          {state?.error ? (
+          {state?.errors ? (
             <div className="text-red-500">
               <ul>
-                {state.error?.map(issue => (
+                {state.errors?.map(issue => (
                   <li key={issue} className="flex gap-1">
                     {issue}
                   </li>
