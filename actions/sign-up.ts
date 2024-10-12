@@ -1,12 +1,13 @@
 'use server'
 
-import { FormValues, signUpSchema } from '@/validations/sign-up-schema'
+import { z } from 'zod'
+import { signUpSchema } from '@/validations/sign-up-schema'
 import { revalidatePath } from 'next/cache'
 
 export interface FormState {
   message: string
-  data: FormValues | null
-  error?: string[]
+  data: z.infer<typeof signUpSchema> | null
+  errors?: string[]
 }
 
 export async function submitSignUpForm(
@@ -14,15 +15,12 @@ export async function submitSignUpForm(
   formData: FormData,
 ): Promise<FormState> {
   const ERROR_MESSAGE = '[SIGN-UP] Failed to submit the form'
-  // TODO: Log the form data to an analytics service
-  console.log('[SIGN-UP] formData', formData)
   try {
     const parsed = signUpSchema.safeParse({
       firstName: formData.get('firstName'),
       lastName: formData.get('lastName'),
       email: formData.get('email'),
       password: formData.get('password'),
-      confirmPassword: formData.get('confirmPassword'),
       phoneNumber: formData.get('phoneNumber'),
       countryCode: formData.get('countryCode'),
     })
@@ -31,7 +29,7 @@ export async function submitSignUpForm(
       return {
         ...prevState,
         data: null,
-        error: parsed.error.issues.map(error => error.message),
+        errors: parsed.error.issues.map(error => error.message),
       }
     }
 
@@ -50,7 +48,7 @@ export async function submitSignUpForm(
     return {
       data: null,
       message: ERROR_MESSAGE,
-      error:
+      errors:
         error instanceof Error
           ? [error.message]
           : ['An unknown error occurred'],

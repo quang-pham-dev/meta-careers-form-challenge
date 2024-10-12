@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Toaster } from '@/components/ui/toaster'
 import { META_DATA, geistSans, geistMono } from '@/constants'
 
 const { title, description } = META_DATA
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <main>{children}</main>
+        <Toaster />
       </body>
     </html>
   )
