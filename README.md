@@ -8,21 +8,37 @@ This project implements a modern Sign Up form using Next.js, React, and various 
 
 ### Core Technologies:
 
-- [Next.js](https://nextjs.org/) (v14.2.15)
-- [React](https://react.dev/) (v18)
-- [React DOM](https://reactjs.org/docs/react-dom.html) (v18)
+- [Next.js](https://nextjs.org/) (v15.0.0-rc.0)
+- [React](https://react.dev/) (v19.0.0-rc-06d0b89e-20240801)
+- [React DOM](https://reactjs.org/docs/react-dom.html) (v19.0.0-rc-06d0b89e-20240801)
 - [TypeScript](https://www.typescriptlang.org/) (v5)
 
 ### Form Handling and Validation:
 
 - [React Hook Form](https://react-hook-form.com/) (v7.53.0)
 - [Zod](https://github.com/colinhacks/zod) (v3.23.8)
+- [@hookform/resolvers](https://github.com/react-hook-form/resolvers) (v3.9.0)
 
 ### UI and Styling:
 
 - [Tailwind CSS](https://tailwindcss.com/) (v3.4.1)
 - [Shadcn/ui](https://ui.shadcn.com/) (v0.0.4)
 - [Lucide React](https://lucide.dev/) (v0.451.0)
+- [Framer Motion](https://www.framer.com/motion/) (v11.11.8)
+- [Radix UI](https://www.radix-ui.com/) components:
+  - [@radix-ui/react-icons](https://www.radix-ui.com/icons) (v1.3.0)
+  - [@radix-ui/react-label](https://www.radix-ui.com/primitives/docs/components/label) (v2.1.0)
+  - [@radix-ui/react-select](https://www.radix-ui.com/primitives/docs/components/select) (v2.1.2)
+  - [@radix-ui/react-slot](https://www.radix-ui.com/primitives/docs/utilities/slot) (v1.1.0)
+  - [@radix-ui/react-toast](https://www.radix-ui.com/primitives/docs/components/toast) (v1.2.2)
+- [class-variance-authority](https://cva.style/docs) (v0.7.0)
+- [clsx](https://github.com/lukeed/clsx) (v2.1.1)
+- [tailwind-merge](https://github.com/dcastil/tailwind-merge) (v2.5.3)
+- [tailwindcss-animate](https://github.com/jamiebuilds/tailwindcss-animate) (v1.0.7)
+
+### Utilities:
+
+- [libphonenumber-js](https://github.com/catamphetamine/libphonenumber-js) (v1.11.11)
 
 ### Development Tools:
 

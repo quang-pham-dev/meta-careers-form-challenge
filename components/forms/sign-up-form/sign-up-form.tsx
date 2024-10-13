@@ -104,7 +104,7 @@ export default function SignUpForm() {
 
       form.reset()
     }
-  }, [state.data, toast, form])
+  }, [state.data])
 
   function submitForm(values: FormValues) {
     startTransition(async () => {
