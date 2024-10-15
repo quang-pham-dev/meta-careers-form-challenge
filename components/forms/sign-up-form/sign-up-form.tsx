@@ -7,7 +7,7 @@ import {
   useActionState,
   startTransition,
 } from 'react'
-import { useFormStatus } from 'react-dom'
+import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EyeIcon, EyeOffIcon, CheckCircle2, XCircle } from 'lucide-react'
@@ -371,11 +371,11 @@ export default function SignUpForm() {
           ) : null}
           <SubmitButton isPending={isPending} />
         </div>
-        <p className="text-center text-sm text-gray-600">
+        <p>
           Already have a Career Profile?{' '}
-          <a href="#" className="text-blue-600 hover:underline">
+          <Link href="#" className="text-blue-700 text-bold hover:underline">
             Log in
-          </a>
+          </Link>
         </p>
       </form>
     </Form>

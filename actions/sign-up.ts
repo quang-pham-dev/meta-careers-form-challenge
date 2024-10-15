@@ -43,8 +43,6 @@ export async function submitSignUpForm(
       message: 'Form submitted successfully',
     }
   } catch (error) {
-    // TODO: Log the error to an error tracking service
-    console.log('[SIGN-UP] error', error)
     return {
       data: null,
       message: ERROR_MESSAGE,

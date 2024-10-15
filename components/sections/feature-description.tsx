@@ -9,7 +9,7 @@ export function FeatureDescription({
 }: FeatureDescriptionProps) {
   return (
     <div>
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <h2 className="text-xl font-semibold mb-2">{title}</h2>
       <p className="text-gray-600">{description}</p>
     </div>
   )
