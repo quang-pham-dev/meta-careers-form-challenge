@@ -6,6 +6,7 @@ import {
   useRef,
   useActionState,
   startTransition,
+  useCallback,
 } from 'react'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -45,7 +46,15 @@ const PASSWORD_STRENGTH_INDICATORS = [
   { label: 'At least 6 characters', met: ['length'] },
   { label: 'One number', met: ['number'] },
   { label: 'One symbol', met: ['symbol'] },
-]
+] as const
+
+const PASSWORD_REQUIREMENTS = {
+  length: (value: string) => value.length >= 6,
+  number: (value: string) => /\d/.test(value),
+  symbol: (value: string) => /[!@#$%^&*(),.?":{}|<>]/.test(value),
+} as const
+
+type PasswordStrength = Record<keyof typeof PASSWORD_REQUIREMENTS, boolean>
 
 // Update the initialState to match the FormState type
 const initialState: FormState = {
@@ -57,13 +66,13 @@ const initialState: FormState = {
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [passwordStrength, setPasswordStrength] = useState({
+  const [passwordStrength, setPasswordStrength] = useState<PasswordStrength>({
     length: false,
     number: false,
     symbol: false,
   })
+
   const formRef = useRef<HTMLFormElement>(null)
-  // using useActionState instead of useFormState
   const [state, formAction, isPending] = useActionState(
     submitSignUpForm,
     initialState,
@@ -88,40 +97,54 @@ export default function SignUpForm() {
   const confirmPassword = form.watch('confirmPassword')
 
   useEffect(() => {
+    if (!password) {
+      setPasswordStrength({
+        length: false,
+        number: false,
+        symbol: false,
+      })
+      return
+    }
+
     setPasswordStrength({
-      length: password.length >= 6,
-      number: /\d/.test(password),
-      symbol: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+      length: PASSWORD_REQUIREMENTS.length(password),
+      number: PASSWORD_REQUIREMENTS.number(password),
+      symbol: PASSWORD_REQUIREMENTS.symbol(password),
     })
   }, [password])
 
+  // Success notification
   useEffect(() => {
     if (state.data) {
       toast({
-        title: 'Account created successfully!',
-        description: 'You can now log in with your new account.',
+        title: 'Success!',
+        description: 'Your account has been created successfully.',
+        variant: 'default',
       })
 
       form.reset()
     }
   }, [state.data])
 
-  function submitForm(values: FormValues) {
-    startTransition(async () => {
-      const formData = new FormData(formRef.current!)
-      Object.entries(values).forEach(([key, value]) => {
-        if (
-          key !== 'confirmPassword' &&
-          value !== undefined &&
-          value !== null
-        ) {
-          formData.append(key, value.toString())
-        }
-      })
+  const submitForm = useCallback(
+    async (values: FormValues) => {
+      if (!formRef.current) return
 
-      formAction(formData)
-    })
-  }
+      startTransition(() => {
+        const formData = new FormData(formRef.current!)
+
+        // Only append non-null and non-undefined values
+        Object.entries(values).forEach(([key, value]) => {
+          if (key !== 'confirmPassword' && value != null) {
+            formData.append(key, value.toString())
+          }
+        })
+
+        formAction(formData)
+      })
+    },
+    [formAction],
+  )
 
   return (
     <Form {...form}>

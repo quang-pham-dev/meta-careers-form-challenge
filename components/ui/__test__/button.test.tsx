@@ -1,6 +1,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { Button } from '../button'
+import Link from 'next/link'
 
 describe('Button', () => {
   it('matches snapshot', () => {
@@ -36,7 +37,7 @@ describe('Button', () => {
   it('renders as a child component when asChild is true', () => {
     render(
       <Button asChild>
-        <a href="/">Link Button</a>
+        <Link href="/">Link Button</Link>
       </Button>,
     )
     const link = screen.getByRole('link', { name: /link button/i })
