@@ -10,46 +10,75 @@ export interface FormState {
   errors?: string[]
 }
 
+const ERROR_MESSAGES = {
+  VALIDATION: 'Please check your input and try again',
+  SERVER: 'An error occurred while processing your request',
+  UNKNOWN: 'An unexpected error occurred',
+} as const
+
 export async function submitSignUpForm(
   prevState: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  const ERROR_MESSAGE = '[SIGN-UP] Failed to submit the form'
   try {
-    const parsed = signUpSchema.safeParse({
+    // Extract and validate form data
+    const rawFormData = {
       firstName: formData.get('firstName'),
       lastName: formData.get('lastName'),
       email: formData.get('email'),
       password: formData.get('password'),
       phoneNumber: formData.get('phoneNumber'),
       countryCode: formData.get('countryCode'),
-    })
+    }
 
-    if (!parsed.success) {
+    const validationResult = signUpSchema.safeParse(rawFormData)
+
+    if (!validationResult.success) {
       return {
         ...prevState,
         data: null,
-        errors: parsed.error.issues.map(error => error.message),
+        message: ERROR_MESSAGES.VALIDATION,
+        errors: validationResult.error.issues.map(issue => issue.message),
       }
     }
 
-    const data = parsed.data
+    const data = validationResult.data
 
-    // Revalidate the home page
-    revalidatePath('/')
+    try {
+      // Here you would typically:
+      // 1. Hash the password
+      // 2. Check if email already exists
+      // 3. Create user in database
+      // 4. Send verification email
+      // 5. Create session/token
 
-    return {
-      data,
-      message: 'Form submitted successfully',
+      // For now, we'll just simulate success
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      // Revalidate the cache
+      revalidatePath('/')
+
+      return {
+        data,
+        message: 'Account created successfully',
+        errors: undefined,
+      }
+    } catch (error) {
+      console.error('[SIGN-UP] Server error:', error)
+      return {
+        data: null,
+        message: ERROR_MESSAGES.SERVER,
+        errors: [
+          error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN,
+        ],
+      }
     }
   } catch (error) {
+    console.error('[SIGN-UP] Unexpected error:', error)
     return {
       data: null,
-      message: ERROR_MESSAGE,
-      errors:
-        error instanceof Error
-          ? [error.message]
-          : ['An unknown error occurred'],
+      message: ERROR_MESSAGES.UNKNOWN,
+      errors: [ERROR_MESSAGES.UNKNOWN],
     }
   }
 }
